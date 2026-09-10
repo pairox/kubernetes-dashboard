@@ -1,3 +1,6 @@
+
+
+```hcl
 resource "helm_release" "kubernetes_dashboard" {
   name             = "kubernetes-dashboard"
   namespace        = "kubernetes-dashboard"
@@ -16,3 +19,4 @@ resource "helm_release" "kubernetes_dashboard" {
     value = "pairox"
   }
 }
+```
