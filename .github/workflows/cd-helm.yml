@@ -16,9 +16,6 @@ name: CD / Helm
 
 on:
   push:
-    paths:
-      - '.github/workflows/cd-helm.yml'
-      - 'charts/**'
     branches:
       - master
   workflow_dispatch:
