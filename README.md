@@ -53,26 +53,7 @@ branch `gh-pages` (`/(root)`). The first successful workflow run creates that br
 
 Terraform can then resolve the newest published version by using the Helm repository and omitting `version`:
 
-```hcl
-resource "helm_release" "kubernetes_dashboard" {
-  name             = "kubernetes-dashboard"
-  namespace        = "kubernetes-dashboard"
-  create_namespace = true
 
-  repository = "https://pairox.github.io/kubernetes-dashboard/"
-  chart      = "kubernetes-dashboard"
-
-  set {
-    name  = "app.scheduling.nodeSelector.node"
-    value = "mvk"
-  }
-
-  set {
-    name  = "auth.nodeSelector.node"
-    value = "mvk"
-  }
-}
-```
 
 For a reproducible deployment, specify an explicit chart `version` after testing it; without it, the next
 `terraform apply` may upgrade to the latest release.
