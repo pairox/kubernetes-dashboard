@@ -34,11 +34,48 @@ in front of kong gateway. To find out more about ways to customize your installa
 
 In order to install Kubernetes Dashboard simply run:
 ```console
-# Add kubernetes-dashboard repository
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+# Add the Helm repository published by this fork
+helm repo add kubernetes-dashboard https://pairox.github.io/kubernetes-dashboard/
 # Deploy a Helm Release named "kubernetes-dashboard" using the kubernetes-dashboard chart
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 ```
+
+### Publishing and using this fork's chart
+
+The `CD / Helm` GitHub Actions workflow packages `charts/kubernetes-dashboard`, creates a GitHub Release,
+and updates the `gh-pages` Helm repository. It runs after a push to `master` that changes the chart and can
+also be started manually from the **Actions** tab. The chart version in
+[`charts/kubernetes-dashboard/Chart.yaml`](charts/kubernetes-dashboard/Chart.yaml) must be increased for a
+new release; an existing version is intentionally not republished.
+
+Before the first release, enable GitHub Pages for this repository with source **Deploy from a branch** and
+branch `gh-pages` (`/(root)`). The first successful workflow run creates that branch.
+
+Terraform can then resolve the newest published version by using the Helm repository and omitting `version`:
+
+```hcl
+resource "helm_release" "kubernetes_dashboard" {
+  name             = "kubernetes-dashboard"
+  namespace        = "kubernetes-dashboard"
+  create_namespace = true
+
+  repository = "https://pairox.github.io/kubernetes-dashboard/"
+  chart      = "kubernetes-dashboard"
+
+  set {
+    name  = "app.scheduling.nodeSelector.node"
+    value = "mvk"
+  }
+
+  set {
+    name  = "auth.nodeSelector.node"
+    value = "mvk"
+  }
+}
+```
+
+For a reproducible deployment, specify an explicit chart `version` after testing it; without it, the next
+`terraform apply` may upgrade to the latest release.
 
 For more information about our Helm chart visit [ArtifactHub](https://artifacthub.io/packages/helm/k8s-dashboard/kubernetes-dashboard).
 
