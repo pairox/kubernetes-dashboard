@@ -53,7 +53,7 @@ branch `gh-pages` (`/(root)`). The first successful workflow run creates that br
 
 Terraform can then resolve the newest published version by using the Helm repository and omitting `version`:
 
-
+#
 
 For a reproducible deployment, specify an explicit chart `version` after testing it; without it, the next
 `terraform apply` may upgrade to the latest release.
